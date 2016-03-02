@@ -16,6 +16,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+    'ngLodash',
     'Blog'
   ])
   .config(function ($routeProvider) {
@@ -34,3 +35,8 @@ angular
         redirectTo: '/'
       });
   });
+
+  Array.prototype.remove = function(item){
+    var index = this.indexOf(item);
+    return this.splice(index, 1);
+  };

@@ -4,7 +4,7 @@
 *
 * Description
 */
-angular.module('Blog', []).
+angular.module('Blog').
 directive('blogList', ['$log', function($log){
 	// Runs during compile
 	return {
@@ -20,7 +20,7 @@ directive('blogList', ['$log', function($log){
 		// replace: true,
 		// transclude: true,
 		// compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
-		link: function() {
+		link: function(/*$scope, iElm, iAttrs, controller*/) {
 			$log.log('link asdfsd');
 			
 
