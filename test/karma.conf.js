@@ -33,6 +33,7 @@ module.exports = function(config) {
       'bower_components/ckeditor/ckeditor.js',
       'bower_components/ng-lodash/build/ng-lodash.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'node_modules/mockfirebase/browser/mockfirebase.js',
       // endbower
       "app/scripts/**/*.js",
       "test/mock/**/*.js",
