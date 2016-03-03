@@ -20,31 +20,12 @@ angular.module('webdotnetukApp')
 angular.module('webdotnetukApp')
 .controller('BlogController', ['$scope', '$log', 'Post', function($scope, $log, Post){
 	
-	// var fireBaseUrl = 'https://glaring-inferno-2473.firebaseio.com';
-	// var blogFirebaseRef = new Firebase(fireBaseUrl+'/blog');
-	
 	$scope.articles = [];
-
-	// blogFirebaseRef.once('value', function(snapshot){
-	// 	var posts = snapshot.val() || {};
-	// 	var tmpArray = [];
-	// 	for(var postKey in posts){
-	// 		var post = new Post(posts[postKey]);
-	// 		post.fbKey = postKey;
-	// 		tmpArray.push(post);
-	// 	}
-			
-	// 	$scope.$apply(function(){
-	// 		$scope.articles = tmpArray;
-	// 	});		
-	// });
 
 	function initialiseScope(){
 		var promise = Post.findAll();
 		promise.then(function(items){
-			$scope.$apply(function(){
-				$scope.articles = items;
-			});
+			$scope.articles = items;
 		},
 		function(err){
 			$log.log(err);
@@ -68,11 +49,12 @@ angular.module('webdotnetukApp')
 
 	};
 	$scope.deleteArticle = function(article){
-		//$scope.articles.remove(article);
-		article.delete(function(){
-			$scope.$apply(function(){
-				$scope.articles.remove(article);
-			});
+		var promise = article.delete();
+		promise.then(function(){
+			$scope.articles.remove(article);
+		},
+		function(){
+
 		});
 	};
 

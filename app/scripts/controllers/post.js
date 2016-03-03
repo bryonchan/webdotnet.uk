@@ -1,20 +1,31 @@
 'use strict';
 angular.module('Blog')
-.factory('Post', ['Firebase', 'firebaseUrl', function(Firebase, firebaseUrl){
+.factory('Post', ['Firebase', 'firebaseUrl', '$q', function(Firebase, firebaseUrl, $q){
 	
 	var blogFirebaseRef = new Firebase(firebaseUrl+'/blog');
 
 	// blog post type
-	var Post = function(postData){
-		if(!postData){
+	var Post = function(postDataOrSnapshot){
+		var self = this;
+		if(postDataOrSnapshot){
+			if(postDataOrSnapshot.ref && postDataOrSnapshot.val){
+				var postData = postDataOrSnapshot.val();
+				instantiate(postData);
+				this.ref = postDataOrSnapshot.ref();
+			}else{
+				instantiate(postDataOrSnapshot);
+			}
+		}
+		else{
 			this.content = '';
 			this.created = null;
 			this.modified = null;
-		}else{
-			this.content = postData.content;
-			this.created = new Date(postData.created);
-			this.modified = new Date(postData.modified);
-			this.serverObject = postData; //serverObject is the firebase 
+		}
+
+		function instantiate(postData){
+			self.content = postData.content;
+			self.created = new Date(postData.created);
+			self.modified = new Date(postData.modified);
 		}
 	};
 
@@ -35,9 +46,37 @@ angular.module('Blog')
 		return self.ref.key();
 	};
 
-	Post.prototype.delete = function(onDelete){
+	Post.prototype.delete = function(){
 		var self = this;
-		self.ref.remove(onDelete);
+		var deferred = $q.defer();
+		if(self.ref){
+			self.ref.remove(function(){
+				deferred.resolve();
+			});
+		}else{
+			deferred.resolve();
+		}
+
+		return deferred.promise;
+		
+	};
+
+	Post.findAll = function(){
+		var deferred = $q.defer();
+		blogFirebaseRef.once('value', function(snapshot){
+			var tmpArray = [];
+			snapshot.forEach(function(data){
+				var post = new Post(data);
+				tmpArray.push(post);
+			});
+				
+			deferred.resolve(tmpArray);	
+		});
+		return deferred.promise;
+	};
+
+	Post.getRef = function(){
+		return blogFirebaseRef;
 	};
 
 	return Post;
