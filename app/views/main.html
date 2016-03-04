@@ -4,7 +4,7 @@
   </hgroup>
 </header>
 <div class="row" ng-controller="BlogController">
-  <button ng-click="createNewArticle()">Add</button>
+  <button ng-click="createNewArticle()" ng-show="pageMode === 'edit'">Add</button>
   <blog-list ng-repeat="a in articles">
     <div ng-controller="CkeditorController">
       <div ng-switch on="a.displayMode">
@@ -16,9 +16,9 @@
             
         </div>
       </div>
-      <button ng-click="saveArticle(a)">Save</button>
-      <button ng-click="editArticle(a)">Edit</button>
-      <button ng-click="deleteArticle(a)">Delete</button>
+      <button ng-click="saveArticle(a)" ng-show="pageMode === 'edit' && a.displayMode === 'edit'">Save</button>
+      <button ng-click="editArticle(a)" ng-show="pageMode === 'edit' && a.displayMode === 'view'">Edit</button>
+      <button ng-click="deleteArticle(a)" ng-show="pageMode === 'edit'">Delete</button>
     </div>
   </blog-list>
 </div>

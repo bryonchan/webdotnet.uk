@@ -31,6 +31,9 @@ angular
         controller: 'AboutCtrl',
         controllerAs: 'about'
       })
+      .when('/edit', {
+        templateUrl: 'views/main.html'
+      })
       .otherwise({
         redirectTo: '/'
       });

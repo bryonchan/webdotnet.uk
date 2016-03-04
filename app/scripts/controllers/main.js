@@ -18,14 +18,26 @@ angular.module('webdotnetukApp')
 
 
 angular.module('webdotnetukApp')
-.controller('BlogController', ['$scope', '$log', 'Post', function($scope, $log, Post){
+.controller('BlogController', ['$scope', '$log', 'Post', '$location', function($scope, $log, Post, $location){
 	
 	$scope.articles = [];
+	$scope.pageMode = 'view';
+	$scope.$on('$routeChangeSuccess', function(){
+		if($location.path() === '/edit'){
+			$scope.pageMode = 'edit';
+		}else{
+			$scope.pageMode = 'view';
+		}
+
+	})
 
 	function initialiseScope(){
 		var promise = Post.findAll();
 		promise.then(function(items){
 			$scope.articles = items;
+			$scope.articles.forEach(function(article){
+				article.displayMode = 'view';
+			});
 		},
 		function(err){
 			$log.log(err);
